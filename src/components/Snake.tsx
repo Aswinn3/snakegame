@@ -5,3 +5,13 @@ import { Coordinate } from "../types/types";
 
 
 
+interface SnakeProps{
+    snake: Coordinate[];
+}
+
+
+export default function Snake( { snake }: SnakeProps): JSX.Element{
+    return(
+        <></>
+    );
+}
