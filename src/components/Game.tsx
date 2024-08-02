@@ -20,29 +20,43 @@ const SCORE_INCREMENT = 10;
 
 
  export default function Game():JSX.Element{
-    const [directoion, setDirection] = useState<Direction>(Direction.Right);
-    const [snake, setSnake] = useState<Coordinate[]>(SNAKE_INITIAL_POSITION);
-    const [food, setFood] = useState<Coordinate>(FOOD_INITIAL_POSITION);
-    const [Score, setScore] = useState<number>(0);
-    const [isGameOver, setIsGameOver] = useState<boolean>(false);
-    const [isPaused, setIsPaused] = useState<boolean>(false);
+   const [directoion, setDirection] = useState<Direction>(Direction.Right);
+   const [snake, setSnake] = useState<Coordinate[]>(SNAKE_INITIAL_POSITION);
+   const [food, setFood] = useState<Coordinate>(FOOD_INITIAL_POSITION);
+   const [Score, setScore] = useState<number>(0);
+   const [isGameOver, setIsGameOver] = useState<boolean>(false);
+   const [isPaused, setIsPaused] = useState<boolean>(false);
 
-    const handleGesture = (event: GestureEventType) => {
-        const { translationX, translationY } = event.nativeEvent;
+   const handleGesture = (event: GestureEventType) => {
+      const { translationX, translationY } = event.nativeEvent;
         if (Math.abs(translationX) > Math.abs(translationY)) {
          if (translationX > 0) {
            setDirection(Direction.Right);
          } else {
            setDirection(Direction.Left);
          }
-       } else {
+      } else {
          if (translationY > 0) {
            setDirection(Direction.Down);
          } else {
            setDirection(Direction.Up);
          }
-       }
+      }
+   };
+
+   const reloadGame = () => {
+      setSnake(SNAKE_INITIAL_POSITION);
+      setFood(FOOD_INITIAL_POSITION);
+      setIsGameOver(false);
+      setScore(0);
+      setDirection(Direction.Right);
+      setIsPaused(false);
     };
+  
+    const pauseGame = () => {
+      setIsPaused(!isPaused);
+    };
+
 
     return <SafeAreaView style={styles.container}></SafeAreaView>
  }
@@ -51,5 +65,13 @@ const SCORE_INCREMENT = 10;
     container: {
         flex: 1,
         backgroundColor: Colors.primary,
-    }
- })
+    },
+    boundaries: {
+      flex: 1,
+      borderColor: Colors.primary,
+      borderWidth: 12,
+      borderBottomLeftRadius: 30,
+      borderBottomRightRadius: 30,
+      backgroundColor: Colors.background,
+    }, 
+ });
