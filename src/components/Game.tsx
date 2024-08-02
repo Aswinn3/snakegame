@@ -20,12 +20,52 @@ const SCORE_INCREMENT = 10;
 
 
  export default function Game():JSX.Element{
-   const [directoion, setDirection] = useState<Direction>(Direction.Right);
+   const [direction, setDirection] = useState<Direction>(Direction.Right);
    const [snake, setSnake] = useState<Coordinate[]>(SNAKE_INITIAL_POSITION);
    const [food, setFood] = useState<Coordinate>(FOOD_INITIAL_POSITION);
    const [Score, setScore] = useState<number>(0);
    const [isGameOver, setIsGameOver] = useState<boolean>(false);
    const [isPaused, setIsPaused] = useState<boolean>(false);
+
+
+   useEffect(() => {
+      if(!isGameOver){
+         const intervalId = setInterval(() => {
+            !isPaused && moveSnake();
+         }, MOVE_INTERVAL);
+         return () => clearInterval(intervalId);
+      }
+   }, [snake, isGameOver, isPaused]);
+
+   const moveSnake = () => {
+      const snakeHead = snake[0];
+      const newHead = {...snakeHead};
+
+      if(checkGameOver(snakeHead, GAME_BOUNDS)){
+         setIsGameOver((prev) => !prev);
+         return;
+      }
+
+
+      switch (direction) {
+         case Direction.Up:
+           newHead.y -= 1;
+           break;
+         case Direction.Down:
+           newHead.y += 1;
+           break;
+         case Direction.Left:
+           newHead.x -= 1;
+           break;
+         case Direction.Right:
+           newHead.x += 1;
+           break;
+         default:
+           break;
+       }
+
+       
+   }
 
    const handleGesture = (event: GestureEventType) => {
       const { translationX, translationY } = event.nativeEvent;
