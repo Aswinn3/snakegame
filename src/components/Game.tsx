@@ -23,7 +23,7 @@ const SCORE_INCREMENT = 10;
    const [direction, setDirection] = useState<Direction>(Direction.Right);
    const [snake, setSnake] = useState<Coordinate[]>(SNAKE_INITIAL_POSITION);
    const [food, setFood] = useState<Coordinate>(FOOD_INITIAL_POSITION);
-   const [Score, setScore] = useState<number>(0);
+   const [score, setScore] = useState<number>(0);
    const [isGameOver, setIsGameOver] = useState<boolean>(false);
    const [isPaused, setIsPaused] = useState<boolean>(false);
 
@@ -64,7 +64,13 @@ const SCORE_INCREMENT = 10;
            break;
        }
 
-       
+       if(checkEatsFood(newHead, food, 2)){
+         setFood(randomFoodPosition(GAME_BOUNDS.xMax, GAME_BOUNDS.yMax));
+         setSnake([newHead, ...snake]);
+         setScore(score + SCORE_INCREMENT);
+       }else{
+         setSnake([newHead, ...snake.slice(0, -1)]);
+       }
    }
 
    const handleGesture = (event: GestureEventType) => {
@@ -97,8 +103,24 @@ const SCORE_INCREMENT = 10;
       setIsPaused(!isPaused);
     };
 
-
-    return <SafeAreaView style={styles.container}></SafeAreaView>
+   return (
+      <PanGestureHandler onGestureEvent={handleGesture}>
+        <SafeAreaView style={styles.container}>
+          <Header
+            reloadGame={reloadGame}
+            pauseGame={pauseGame}
+            isPaused={isPaused}
+          >
+            <Score score={score} />
+          </Header>
+          <View style={styles.boundaries}>
+            <Snake snake={snake} />
+            <Food x={food.x} y={food.y} />
+          </View>
+        </SafeAreaView>
+      </PanGestureHandler>
+   );
+    
  }
 
  const styles = StyleSheet.create({
