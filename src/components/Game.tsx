@@ -27,9 +27,22 @@ const SCORE_INCREMENT = 10;
     const [isGameOver, setIsGameOver] = useState<boolean>(false);
     const [isPaused, setIsPaused] = useState<boolean>(false);
 
-    const handleGesture = () => {
-        
-    }
+    const handleGesture = (event: GestureEventType) => {
+        const { translationX, translationY } = event.nativeEvent;
+        if (Math.abs(translationX) > Math.abs(translationY)) {
+         if (translationX > 0) {
+           setDirection(Direction.Right);
+         } else {
+           setDirection(Direction.Left);
+         }
+       } else {
+         if (translationY > 0) {
+           setDirection(Direction.Down);
+         } else {
+           setDirection(Direction.Up);
+         }
+       }
+    };
 
     return <SafeAreaView style={styles.container}></SafeAreaView>
  }
